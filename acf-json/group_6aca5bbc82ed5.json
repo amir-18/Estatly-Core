@@ -94,6 +94,20 @@
                 "operator": "==",
                 "value": "property_type:residential"
             }
+        ],
+        [
+            {
+                "param": "post_taxonomy",
+                "operator": "==",
+                "value": "property_type:apartment"
+            }
+        ],
+        [
+            {
+                "param": "post_taxonomy",
+                "operator": "==",
+                "value": "property_type:house"
+            }
         ]
     ],
     "menu_order": 0,
@@ -108,5 +122,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1791646859
+    "modified": 1791647159
 }
