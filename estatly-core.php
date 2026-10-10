@@ -1,39 +1,47 @@
 <?php
-// Plugin Name: Estatly Core
-// Author Name: Amir
-// Description: Site Core Plugin Including Custom Post Types, Taxanomies and Shortcodes 
-// Version: 1.0.0
-// Required PHP: 7.4
-// Text Domain: estatly-core
+/**
+ * Plugin Name: Estatly Core
+ * Description: Property CPT, taxonomies, shortcodes and ACF JSON sync for Estatly.
+ * Version:     0.1.0
+ * Author:      Your Name
+ * Text Domain: estatly-core
+ * Requires PHP: 7.4
+ */
 
-
-if(!define('ABSPATH')){
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-define('ESTATLY_CORE_VERSION','1.0.0');
-define('ESTATLY_CORE_PATH',plugin_dir_path(__FILE__));
-define('ESTATLY_CORE_URL',plugin_dir_url(__FILE__));
+define( 'ESTATLY_CORE_VERSION', '0.1.0' );
+define( 'ESTATLY_CORE_PATH', plugin_dir_path( __FILE__ ) );
+define( 'ESTATLY_CORE_URL', plugin_dir_url( __FILE__ ) );
 
-// SAVES ACF JSON FILE IN PLUGIN ACF FOLDER
+add_filter(
+	'acf/settings/save_json',
+	function () {
+		return ESTATLY_CORE_PATH . 'acf-json';
+	}
+);
 
-add_filter('acf/settings/save_json', function(){
-    return ESTATLY_CORE_PATH . 'acf-json';
-});
+add_filter(
+	'acf/settings/load_json',
+	function ( $paths ) {
+		$paths[] = ESTATLY_CORE_PATH . 'acf-json';
+		return $paths;
+	}
+);
 
-// SAVES ACF JSON FILE IN PLUGIN ACF FOLDER
+require_once ESTATLY_CORE_PATH . 'includes/cpt-property.php';
+require_once ESTATLY_CORE_PATH . 'includes/taxonomies.php';
+require_once ESTATLY_CORE_PATH . 'includes/shortcodes.php';
 
-// LOADS ACF JSON FILES FROM PLUGIN ACF FOLDER
+register_activation_hook(
+	__FILE__,
+	function () {
+		estatly_register_property_cpt();
+		estatly_register_taxonomies();
+		flush_rewrite_rules();
+	}
+);
 
-add_filter('acf/settings/load_json', function($paths) {
-    $paths[] = ESTATLY_CORE_PATH . 'acf-json';
-    return $paths;
-});
-
-// LOADS ACF JSON FILES FROM PLUGIN ACF FOLDER
-
-// REQUIRING CPTS,SHORTCODES AND TAXANOMIES
-require_once(ESTATLY_CORE_PATH . 'includes/cpt-property.php')
-require_once(ESTATLY_CORE_PATH . 'includes/taxanomies.php')
-
-// REQUIRING CPTS,SHORTCODES AND TAXANOMIES
+register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
