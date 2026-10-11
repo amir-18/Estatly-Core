@@ -34,6 +34,7 @@ add_filter(
 require_once ESTATLY_CORE_PATH . 'includes/cpt-property.php';
 require_once ESTATLY_CORE_PATH . 'includes/taxonomies.php';
 require_once ESTATLY_CORE_PATH . 'includes/shortcodes.php';
+require_once ESTATLY_CORE_PATH . 'includes/seed-locations.php';
 
 register_activation_hook(
 	__FILE__,
