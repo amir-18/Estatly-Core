@@ -35,6 +35,8 @@ require_once ESTATLY_CORE_PATH . 'includes/cpt-property.php';
 require_once ESTATLY_CORE_PATH . 'includes/taxonomies.php';
 require_once ESTATLY_CORE_PATH . 'includes/shortcodes.php';
 require_once ESTATLY_CORE_PATH . 'includes/seed-properties.php';
+require_once ESTATLY_CORE_PATH . 'includes/seed-locations.php';
+
 
 register_activation_hook(
 	__FILE__,
@@ -44,5 +46,34 @@ register_activation_hook(
 		flush_rewrite_rules();
 	}
 );
+
+
+add_filter( 'acf/format_value/name=prop_price', function ( $value, $post_id, $field ) {
+    if ( is_admin() ) {
+        return $value; // edit screen par asli number rehne do
+    }
+
+    $n = (float) preg_replace( '/[^0-9.]/', '', $value );
+    if ( ! $n ) {
+        return $value;
+    }
+
+    if ( $n >= 10000000 ) {
+        $out = rtrim( rtrim( number_format( $n / 10000000, 2 ), '0' ), '.' ) . ' Crore';
+    } elseif ( $n >= 100000 ) {
+        $out = rtrim( rtrim( number_format( $n / 100000, 2 ), '0' ), '.' ) . ' Lakh';
+    } else {
+        $out = number_format( $n );
+    }
+
+    $out = 'PKR ' . $out;
+
+    if ( has_term( 'for-rent', 'listing_status', $post_id ) ) {
+        $out .= ' / month';
+    }
+
+    return $out;
+}, 10, 3 );
+add_action( 'save_post_property', 'estatly_build_price_display' );
 
 register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );

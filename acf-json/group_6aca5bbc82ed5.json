@@ -106,7 +106,7 @@
             {
                 "param": "post_taxonomy",
                 "operator": "==",
-                "value": "property_type:house"
+                "value": "property_type:home"
             }
         ]
     ],
@@ -122,5 +122,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1791647159
+    "modified": 1791823153
 }
